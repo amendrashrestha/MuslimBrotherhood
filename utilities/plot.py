@@ -7,15 +7,15 @@ import utilities.IOProperties as prop
 
 
 def plot_graph():
-    article_name = "SVD_Year"
+    article_name = "All_Article_Year"
     filepath = os.path.join(prop.date_count,  article_name+'.tsv')
     # date_count = db.get_article_count(article_name)
 
-    year_count = db.get_article_year_count()
+    single_article = 'article_all'
+
+    year_count = db.get_article_year_count(single_article)
 
     write_into_file(year_count, filepath)
-
-
 
     plt.bar(range(len(year_count)), year_count.values(), align='center')
     plt.xticks(range(len(year_count)), list(year_count.keys()))
@@ -25,7 +25,7 @@ def plot_graph():
     #
     plt.xticks(rotation=90)
     plt.savefig(prop.graph+article_name + ".png")
-    # plt.show()
+    plt.show()
 
 
 def plot_mulitiple_line_month_graph():
@@ -143,6 +143,6 @@ def write_into_file(date_count, filepath):
             f.write("{}\t{}\n".format(key, value))
 
 if __name__ == "__main__":
-    # plot_graph()
-    plot_mulitiple_line_month_graph()
+    plot_graph()
+    # plot_mulitiple_line_month_graph()
     # plot_multiple_line_year_graph()

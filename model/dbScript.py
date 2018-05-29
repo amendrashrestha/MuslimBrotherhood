@@ -40,7 +40,7 @@ def get_article_year_count(single_article):
         article_count_query = collection.aggregate([{'$group': {'_id': { '$year': "$date" }, 'count':{'$sum':1}}} ,{'$sort':{'_id': 1}}])
 
         for single_date_info in article_count_query:
-            article_date = str(single_date_info['_id'])
+            article_date = single_date_info['_id']
 
             article_freq = single_date_info['count']
             article_count[article_date] = article_freq
@@ -48,6 +48,24 @@ def get_article_year_count(single_article):
         traceback.print_exc()
 
     return article_count
+
+def get_article_year(single_article):
+    db = client.news_article
+
+    collection = db[single_article.lower()]
+    try:
+        article_year = []
+
+        article_count_query = collection.aggregate([{'$group': {'_id': { '$year': "$date" }, 'count':{'$sum':1}}} ,{'$sort':{'_id': 1}}])
+
+        for single_date_info in article_count_query:
+            article_date = single_date_info['_id']
+
+            article_year.append(article_date)
+    except Exception:
+        traceback.print_exc()
+
+    return article_year
 
 def get_articles(article_name):
     db = client.news_article
@@ -66,6 +84,24 @@ def get_articles(article_name):
     except Exception:
         traceback.print_exc()
 
+
+def get_article_with_year(article_name, year):
+    db = client.news_article
+    collection = db[article_name]
+
+    try:
+        post_query = collection.aggregate([{'$project': {'text': "$text", 'year': { '$year': "$date" }}},{ '$match' : { 'year': year} }])
+
+        articles = []
+
+        for post in post_query:
+            post = post['text']
+            articles.append(post)
+
+        return articles
+
+    except Exception:
+        traceback.print_exc()
 
 
 
